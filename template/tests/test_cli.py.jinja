@@ -4,10 +4,10 @@ from {{ project_name }}.cli import app
 runner = CliRunner()
 
 def test_hello() -> None:
-    result = runner.invoke(app, ["hello"])
+    result = runner.invoke(app)
     assert result.exit_code == 0
     assert "Hello World!" in result.stdout
 
-    result = runner.invoke(app, ["hello", "--name", "Alice"])
+    result = runner.invoke(app, ["--name", "Alice"])
     assert result.exit_code == 0
     assert "Hello Alice!" in result.stdout
