@@ -4,17 +4,21 @@ from typing import Any
 
 import httpx
 
-from {{ package_name }}.config.settings import get_settings
+from {{ package_name }}.cli.config import Config
 from {{ package_name }}.domain.errors import AppError
 
 
 class HttpClient:
     """Synchronous HTTP client with built-in error handling."""
 
-    def __init__(self, timeout: float | None = None, user_agent: str | None = None) -> None:
-        settings = get_settings()
-        self._timeout = timeout or settings.http_timeout
-        self._user_agent = user_agent or settings.http_user_agent
+    def __init__(self, config: Config) -> None:
+        """Initialize HTTP client with configuration.
+
+        Args:
+            config: Application configuration containing timeout and user agent settings.
+        """
+        self._timeout = config.http_timeout
+        self._user_agent = config.http_user_agent
         self._client: httpx.Client | None = None
 
     def _get_client(self) -> httpx.Client:
@@ -101,10 +105,3 @@ class HttpClient:
                 message=str(e),
                 url=url,
             ) from e
-
-
-# Convenience function for quick requests
-def get_json(url: str, params: dict[str, Any] | None = None) -> Any:
-    """Convenience function to fetch JSON from a URL."""
-    with HttpClient() as client:
-        return client.get_json(url, params=params)

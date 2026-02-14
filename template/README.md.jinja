@@ -94,6 +94,7 @@ src/{{ package_name }}/
 ├── __main__.py           # Module entry point
 ├── cli/
 │   ├── app.py            # Main CLI app with autodiscovery
+│   ├── config.py         # Configuration model (CLI options + env vars)
 │   ├── ui/
 │   │   ├── console.py    # Output helpers (ok, warn, err, info)
 │   │   └── errors.py     # Error rendering
@@ -101,8 +102,6 @@ src/{{ package_name }}/
 │       ├── hello.py
 │       └── api/
 │           └── get.py
-├── config/
-│   └── settings.py       # Pydantic settings
 ├── domain/
 │   └── errors.py         # AppError and domain errors
 └── infrastructure/

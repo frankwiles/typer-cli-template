@@ -6,6 +6,7 @@ from pathlib import Path
 
 import typer
 
+from {{ package_name }}.cli.config import Config
 from {{ package_name }}.domain.errors import AppError
 
 app = typer.Typer(
@@ -28,6 +29,7 @@ def _get_version(value: bool) -> None:
 
 @app.callback()
 def main(
+    ctx: typer.Context,
     version: bool = typer.Option(
         False,
         "--version",
@@ -35,9 +37,31 @@ def main(
         is_eager=True,
         help="Show the version and exit.",
     ),
+    debug: bool = typer.Option(
+        False,
+        "--debug/--no-debug",
+        envvar="{{ package_name|upper }}_DEBUG",
+        help="Enable debug mode.",
+    ),
+    http_timeout: float = typer.Option(
+        30.0,
+        "--http-timeout",
+        envvar="{{ package_name|upper }}_HTTP_TIMEOUT",
+        help="HTTP request timeout in seconds.",
+    ),
+    http_user_agent: str = typer.Option(
+        "{{ cli_name }}/0.1.0",
+        "--http-user-agent",
+        envvar="{{ package_name|upper }}_HTTP_USER_AGENT",
+        help="User-Agent header for HTTP requests.",
+    ),
 ) -> None:
     """{{ description }}"""
-    pass
+    ctx.obj = Config(
+        debug=debug,
+        http_timeout=http_timeout,
+        http_user_agent=http_user_agent,
+    )
 
 
 def _discover_commands() -> None:
