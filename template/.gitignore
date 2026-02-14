@@ -1,6 +1,0 @@
-venv/
-.venv/
-*.pyc
-.envrc
-.local_env
-.coverage

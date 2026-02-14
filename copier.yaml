@@ -5,40 +5,45 @@ _templates_suffix: .jinja
 # Project information
 project_name:
   type: str
-  help: Your project name
+  help: Your project name (e.g., my_cli_project)
   default: my_cli_project
 
-command_name:
+package_name:
   type: str
-  help: Name your command
-  default: cli
+  help: Python package name (e.g., my_cli_project)
+  default: "{{ project_name|lower|replace('-', '_')|replace(' ', '_') }}"
 
-project_description:
+cli_name:
+  type: str
+  help: CLI command name (e.g., mycli)
+  default: "{{ project_name|lower|replace('_', '-')|replace(' ', '-') }}"
+
+description:
   type: str
   help: A short description of the project
-  default: A Python CLI tool
+  default: A modern Python CLI tool
 
 author_name:
   type: str
   help: Your name
   default: Frank Wiles
 
-author_email:
+license:
   type: str
-  help: Your email
-  default: frank@revsys.com
+  help: License for the project
+  default: MIT
+  choices:
+    - MIT
+    - Apache-2.0
+    - BSD-3-Clause
+    - GPL-3.0
 
-author_website:
+python_version:
   type: str
-  help: Your website
-  default: https://www.frankwiles.com
+  help: Minimum Python version
+  default: "3.12"
 
-github_username:
-  type: str
-  help: Your GitHub username
-  default: frankwiles
-
-version:
-  type: str
-  help: Initial version
-  default: 0.1.0
+use_commands_folder:
+  type: bool
+  help: Use commands/ folder structure for subcommands?
+  default: true
