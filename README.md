@@ -13,7 +13,6 @@ Generated projects include:
 - **[textual](https://textual.textualize.io/)** - TUI framework
 - **[httpx](https://www.python-httpx.org/)** - HTTP client
 - **[pydantic](https://docs.pydantic.dev/)** - Data validation
-- **[pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)** - Settings management
 - **[ruff](https://docs.astral.sh/ruff/)** - Fast linter + formatter
 - **[pytest](https://docs.pytest.org/)** - Testing
 - **[ty](https://github.com/astral-sh/ty)** - Type checker (Astral's new type checker)
