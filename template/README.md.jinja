@@ -1,51 +1,140 @@
 # {{ project_name }}
 
-{{ project_description }}
+{{ description }}
 
 ## Requirements
 
-- Python 3.11+
+- Python {{ python_version }}+
 - [uv](https://github.com/astral-sh/uv) for dependency management
+- [just](https://github.com/casey/just) for running tasks (optional but recommended)
 
 ## Installation
 
-First, make sure you have uv installed:
+### Using uv (recommended)
 
 ```bash
-pip install uv
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/{{ package_name }}.git
+cd {{ package_name }}
+
+# Install dependencies
+uv sync
+
+# Run the CLI
+uv run {{ cli_name }} --help
 ```
 
-Then, to install the project and its dependencies:
+### Using uvx (one-off)
 
 ```bash
-uv venv venv
-uv pip install -e .
+# Run directly from git
+uvx --from git+https://github.com/YOUR_USERNAME/{{ package_name }} {{ cli_name }} --help
 ```
 
 ## Usage
 
 ```bash
-{{ command_name }}
+# Show help
+{{ cli_name }} --help
+
+# Show version
+{{ cli_name }} --version
+
+{% if use_commands_folder %}
+# Run hello command
+{{ cli_name }} hello world
+{{ cli_name }} hello name YourName
+
+# Fetch JSON from an API
+{{ cli_name }} api get json https://api.github.com
+{% endif %}
 ```
 
 ## Development
 
-1. Clone the repository
-2. Create a virtual environment and install dependencies:
-   ```bash
-   uv venv
-   uv pip install -e ".[dev]"
-   ```
-3. Install pre-commit hooks:
-   ```bash
-   pre-commit install
-   ```
-4. Run tests: `pytest`
+This project uses `just` for common tasks:
+
+```bash
+# Show available commands
+just
+
+# Install dependencies
+just sync
+
+# Run the CLI
+just run --help
+
+# Run tests
+just test
+
+# Format code
+just fmt
+
+# Lint code
+just lint
+
+# Type check
+just typecheck
+
+# Run all checks
+just check
+
+# Build package
+just build
+
+# Install pre-commit hooks
+just pre-commit
+```
+
+## Project Structure
+
+```
+src/{{ package_name }}/
+├── __init__.py           # Package init
+├── __main__.py           # Module entry point
+├── cli/
+│   ├── app.py            # Main CLI app with autodiscovery
+│   ├── config.py         # Configuration model (CLI options + env vars)
+│   ├── ui/
+│   │   ├── console.py    # Output helpers (ok, warn, err, info)
+│   │   └── errors.py     # Error rendering
+│   └── commands/         # Auto-discovered commands
+│       ├── hello.py
+│       └── api/
+│           └── get.py
+├── domain/
+│   └── errors.py         # AppError and domain errors
+└── infrastructure/
+    └── http_client.py    # HTTP client wrapper
+```
+
+## Adding New Commands
+
+{% if use_commands_folder %}
+1. Create a new file in `cli/commands/` or a subdirectory
+2. Define `app = typer.Typer()` in the module
+3. Add commands with `@app.command()` decorator
+
+Example:
+
+```python
+# cli/commands/mycommand.py
+import typer
+from {{ package_name }}.cli.ui.console import ok
+
+app = typer.Typer()
+
+@app.command()
+def greet(name: str) -> None:
+    """Greet someone."""
+    ok(f"Hello, {name}!")
+```
+
+This automatically becomes available as `{{ cli_name }} mycommand greet`.
+{% else %}
+Add new commands by modifying the `cli/app.py` file.
+{% endif %}
 
 ## License
 
-This project is licensed under the BSD License.
-
-## Author
-
-Written by [{{ author_name }}]({{ author_website}})
+{{ license }}
